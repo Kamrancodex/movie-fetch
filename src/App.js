@@ -74,7 +74,7 @@ export default function App() {
     <Fragment>
       <div className="bg-indigo-700 h-screen">
         <Navbar query={query} setQuery={setQuery} />
-        <div className="grid grid-cols-2 h-5/6 overflow-scroll">
+        <div className="grid sm:grid-cols-2 grid-cols-1 h-5/6 overflow-scroll">
           {!isLoading && !error && (
             <LeftSide
               movies={movies}
