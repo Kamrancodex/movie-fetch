@@ -9,11 +9,22 @@ const KEY = "1d16f7dc";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watchedMovieDetials, setWatchedMovieDetails] = useState([]);
+  // const [watchedMovieDetials, setWatchedMovieDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [watchedMovieDetials, setWatchedMovieDetails] = useState(function () {
+    const storedMovies = localStorage.getItem("watched");
+    const parsedMovies = JSON.parse(storedMovies);
+
+    // Check if parsedMovies is iterable (array or object)
+    if (parsedMovies && typeof parsedMovies[Symbol.iterator] === "function") {
+      return parsedMovies; // Set parsedMovies if it's iterable
+    } else {
+      return []; // Return an empty array if parsedMovies is not iterable
+    }
+  });
   function handleSelectMovie(id) {
     setSelectedMovie((selectedMovie) => (selectedMovie == id ? null : id));
   }
@@ -31,6 +42,12 @@ export default function App() {
       watchedMovieDetials.filter((wathcedMovie) => wathcedMovie?.imdbID !== id)
     );
   }
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watchedMovieDetials));
+    },
+    [watchedMovieDetials]
+  );
   useEffect(
     function () {
       async function fetchMovies() {

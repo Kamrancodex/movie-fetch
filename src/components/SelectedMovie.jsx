@@ -39,7 +39,7 @@ export default function SelectedMovie({
     handleCloseMovie();
   }
   const isAlreadyAddedToWatched = watchedMovieDetials
-    .map((watchedMovie) => watchedMovie.imdbID)
+    ?.map((watchedMovie) => watchedMovie.imdbID)
     .includes(selectedMovie);
   useEffect(
     function () {

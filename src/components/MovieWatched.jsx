@@ -15,7 +15,7 @@ export default function MovieWatched({
         <div className="col-span-4">
           <div className="flex gap-6">
             <h3 className="text-xl text-white font-bold">
-              {watchedMovieDetials.title}
+              {watchedMovieDetials?.title}
             </h3>
             <span className="text-lg text-white bold">
               ⌚ {watchedMovieDetials.runtime}
