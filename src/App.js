@@ -5,26 +5,18 @@ import Error from "./components/Error";
 import LeftSide from "./components/LeftSide";
 import SelectedMovie from "./components/SelectedMovie";
 import RightSide from "./components/RightSide";
+import { useMovie } from "./components/useMovie";
+import { useLocalStorage } from "./components/useLocalStorage";
 const KEY = "1d16f7dc";
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  // const [watchedMovieDetials, setWatchedMovieDetails] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [watchedMovieDetials, setWatchedMovieDetails] = useState(function () {
-    const storedMovies = localStorage.getItem("watched");
-    const parsedMovies = JSON.parse(storedMovies);
-
-    // Check if parsedMovies is iterable (array or object)
-    if (parsedMovies && typeof parsedMovies[Symbol.iterator] === "function") {
-      return parsedMovies; // Set parsedMovies if it's iterable
-    } else {
-      return []; // Return an empty array if parsedMovies is not iterable
-    }
-  });
+  const { movies, isLoading, error } = useMovie(query);
+  const [watchedMovieDetials, setWatchedMovieDetails] = useLocalStorage(
+    [],
+    "watched"
+  );
   function handleSelectMovie(id) {
     setSelectedMovie((selectedMovie) => (selectedMovie == id ? null : id));
   }
@@ -42,50 +34,6 @@ export default function App() {
       watchedMovieDetials.filter((wathcedMovie) => wathcedMovie?.imdbID !== id)
     );
   }
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watchedMovieDetials));
-    },
-    [watchedMovieDetials]
-  );
-  useEffect(
-    function () {
-      async function fetchMovies() {
-        try {
-          setIsLoading(true);
-          setError("");
-          const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-          );
-          if (!res.ok) {
-            console.log(res.ok);
-            throw new Error("Something went wrong");
-          }
-
-          const data = await res.json();
-
-          if (data.Response === "False") {
-            throw new Error("Movie Not Found");
-          }
-          setMovies(data.Search);
-        } catch (err) {
-          let errorMessage = err.message || "Movie Not Found";
-          console.error(err);
-
-          setError(errorMessage);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      if (!query) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-      fetchMovies();
-    },
-    [query]
-  );
 
   return (
     <Fragment>
