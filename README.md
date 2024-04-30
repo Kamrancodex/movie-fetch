@@ -1,7 +1,7 @@
 # usepopcorn
 
 Welcome to usepopcorn, a movie search and tracking app built
-with React and Tailwind CSS.
+with React and Tailwind CSS. check live at movie-fetch-two.vercel.app
 
 ## Overview
 
